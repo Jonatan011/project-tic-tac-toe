@@ -13,6 +13,19 @@ export interface GameTurn {
 function App() {
   const [activePlayer, setActivePlayer] = useState("X");
   const [gameTurns, setGameTurns] = useState<GameTurn[]>([]);
+  const [playerNames, setPlayerNames] = useState({name1: "Jugador 1", name2: "Jugador 2"});
+
+  function handleChangeName(
+    event: React.ChangeEvent<HTMLInputElement>,
+    nameKey: string,
+  ) {
+    setPlayerNames((prevPlayerNames) => {
+      return {
+        ...prevPlayerNames, 
+        [nameKey]: event.target.value, 
+      };
+    });
+  }
 
   function handleSelectedSquare(rowIndex: number, colIndex: number) {
     setActivePlayer((lastActivePlayer) =>
@@ -34,18 +47,23 @@ function App() {
       return actualGameTurn;
     });
   }
+  debugger
   return (
     <>
       <main>
         <div id="game-container">
           <ol id="playersContainer" className="highlight-player">
             <Player
-              initialName="Jugador 1"
+              namePlayer={playerNames.name1}
+              onChangeName={handleChangeName}
+              keyName=  "name1"
               playerSymbol="X"
               isActive={activePlayer === "X"}
             ></Player>
             <Player
-              initialName="Jugador 2"
+              namePlayer={playerNames.name2}
+              onChangeName={handleChangeName}
+              keyName=  "name2"
               playerSymbol="O"
               isActive={activePlayer === "O"}
             ></Player>
@@ -54,8 +72,8 @@ function App() {
             gameTurns={gameTurns}
             onSelectedSquare={handleSelectedSquare}
           ></GameBoard>
-          <LogsTurns gameTurns={gameTurns} />
         </div>
+        <LogsTurns playerNames={playerNames} gameTurns={gameTurns} />
       </main>
     </>
   );

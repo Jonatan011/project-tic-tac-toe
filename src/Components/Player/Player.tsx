@@ -1,24 +1,23 @@
 import { useState } from "react";
 
 function Player({
-  initialName,
+  namePlayer,
+  onChangeName,
+  keyName,
   playerSymbol,
   isActive,
 }: {
-  initialName: string;
+  namePlayer: string;
+  onChangeName: (  event: React.ChangeEvent<HTMLInputElement>,nameKey: string) => void;
+  keyName: string;
   playerSymbol: string;
   isActive: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [playerName, setPlayerName] = useState(initialName);
-
   function handleClickButton() {
     setIsEditing((isEditing) => !isEditing);
   }
 
-  function handleChangeName(event: React.ChangeEvent<HTMLInputElement>) {
-    setPlayerName(event.target.value);
-  }
 
   const playerNameField = isEditing ? (
     <input
@@ -26,11 +25,11 @@ function Player({
       name=""
       id=""
       required
-      value={playerName}
-      onChange={(event) => handleChangeName(event)}
+      value={namePlayer}
+      onChange={(event) => onChangeName(event, keyName)}
     />
   ) : (
-    <span className="player-name">{playerName}</span>
+    <span className="player-name">{namePlayer}</span>
   );
 
   const buttonChangeValue = isEditing ? "Guardar" : "Cambiar";
