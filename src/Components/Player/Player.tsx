@@ -40,7 +40,7 @@ function Player({
           {playerNameField}
           <span className="player-symbol">{playerSymbol}</span>
         </span>
-        <button onClick={() => handleClickButton()}>{buttonChangeValue}</button>
+        <button disabled={!isActive} onClick={() => handleClickButton()}>{buttonChangeValue}</button>
       </li>
     </>
   );

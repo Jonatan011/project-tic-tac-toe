@@ -2,7 +2,11 @@ import { GameTurn } from "../../App";
 import "./GameBoard.css";
 
 interface GameBoardProps {
-  onSelectedSquare: (rowIndex: number, colIndex: number) => void;
+  onSelectedSquare: (
+    rowIndex: number,
+    colIndex: number,
+    gameBoard: (string | null)[][]
+  ) => void;
   gameTurns: GameTurn[];
 }
 
@@ -12,8 +16,20 @@ for (let index = 0; index <= 2; index++)
   initialGameBoard.push(Array(3).fill(null));
 
 function GameBoard({ onSelectedSquare, gameTurns }: GameBoardProps) {
-  
-  const gameBoard = initialGameBoard;
+  function isWinningSquare(rowIndex: number, colIndex: number) {
+    if (
+      gameTurns.length > 4 &&
+      gameTurns[0].hasWinner.winningCombinations != null
+    ) {
+      return gameTurns[0].hasWinner.winningCombinations.some(
+        (combination) =>
+          combination.rowIndex === rowIndex && combination.colIndex === colIndex
+      );
+    }
+    return false;
+  }
+
+  const gameBoard = [...initialGameBoard.map((array) => [...array])];
   for (const turn of gameTurns) {
     const { square, symbol } = turn;
     const { rowIndex, colIndex } = square;
@@ -28,9 +44,18 @@ function GameBoard({ onSelectedSquare, gameTurns }: GameBoardProps) {
               {row.map((column, colIndex) => (
                 <li key={colIndex}>
                   <button
+                    className={
+                      isWinningSquare(rowIndex, colIndex) ? "winningSquare" : ""
+                    }
                     onClick={() => {
+                      if (
+                        gameTurns.length > 4 &&
+                        gameTurns[0].hasWinner.isWinner
+                      )
+                        return false;
+
                       if (gameBoard[rowIndex][colIndex] === null)
-                        onSelectedSquare(rowIndex, colIndex);
+                        onSelectedSquare(rowIndex, colIndex, gameBoard);
                     }}
                   >
                     {column}
